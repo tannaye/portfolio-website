@@ -1,0 +1,467 @@
+@import "tailwindcss";
+
+/* Theme switching is class-free: <html data-theme="dark|light"> */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ==================================================================
+   DESIGN TOKENS
+   ================================================================== */
+
+:root,
+[data-theme="dark"] {
+  /* Surfaces & ink: dark first */
+  --bg: #0a0a0a;
+  --bg-elev: #131312;
+  --bg-sunk: #070707;
+  --fg: #f5f5f0;
+  --fg-muted: #a3a39c; /* 7.6:1 on --bg */
+  --fg-subtle: #8a8a83; /* 5.3:1 on --bg, labels only */
+  --line: rgb(245 245 240 / 0.09);
+  --line-strong: rgb(245 245 240 / 0.18);
+
+  /* The single accent. Change it here, and the whole site follows. */
+  --accent: #d4f34a;
+  --accent-ink: #0a0a0a; /* text placed ON the accent */
+  --accent-text: #d4f34a; /* accent used AS text (AA on bg) */
+
+  /* Persona tints, used only inside their section */
+  --tint-eng: #6aa8ff;
+  --tint-music: #e8a13d;
+  --tint-content: #ff5fa2;
+  --music-bg: #1c1108;
+
+  --shadow-soft: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 30px 60px -30px rgb(0 0 0 / 0.6);
+  --grain-opacity: 0.07;
+
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #f4f2ec;
+  --bg-elev: #fbfaf6;
+  --bg-sunk: #ebe8e0;
+  --fg: #111110;
+  --fg-muted: #55544f; /* 7.1:1 */
+  --fg-subtle: #6b6a64; /* 5.1:1 */
+  --line: rgb(17 17 16 / 0.1);
+  --line-strong: rgb(17 17 16 / 0.2);
+  --accent: #d4f34a;
+  --accent-ink: #0a0a0a;
+  --accent-text: #4f5f00; /* olive keeps AA on paper */
+  --tint-eng: #1f5fc4;
+  --tint-music: #a45f00;
+  --tint-content: #c2185b;
+  --music-bg: #2a1a0c;
+  --shadow-soft: 0 1px 0 rgb(255 255 255 / 0.6) inset, 0 30px 60px -30px rgb(40 30 10 / 0.25);
+  --grain-opacity: 0.05;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elev: var(--bg-elev);
+  --color-bg-sunk: var(--bg-sunk);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-text: var(--accent-text);
+  --color-eng: var(--tint-eng);
+  --color-music: var(--tint-music);
+  --color-content: var(--tint-content);
+
+  --font-display: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
+  --font-serif: var(--font-instrument), "Times New Roman", serif;
+}
+
+@theme {
+  /* Fluid type scale */
+  --text-mega: clamp(3.5rem, 12.5vw, 13rem);
+  --text-mega--line-height: 0.86;
+  --text-mega--letter-spacing: -0.055em;
+  --text-display: clamp(2.75rem, 7vw, 7.5rem);
+  --text-display--line-height: 0.92;
+  --text-display--letter-spacing: -0.045em;
+  --text-headline: clamp(2rem, 4.2vw, 4rem);
+  --text-headline--line-height: 1;
+  --text-headline--letter-spacing: -0.035em;
+  --text-title: clamp(1.375rem, 2vw, 1.875rem);
+  --text-title--line-height: 1.15;
+  --text-title--letter-spacing: -0.02em;
+  --text-lede: clamp(1.25rem, 2.2vw, 2rem);
+  --text-lede--line-height: 1.3;
+  --text-lede--letter-spacing: -0.02em;
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.08em;
+
+  /* Radii */
+  --radius-card: 1.25rem; /* 20px */
+  --radius-card-lg: 1.5rem; /* 24px */
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-pulse-dot: pulse-dot 2.4s var(--ease-out-expo) infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+  @keyframes pulse-dot {
+    0% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    80%,
+    100% {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+}
+
+/* ==================================================================
+   BASE
+   ================================================================== */
+
+@layer base {
+  html {
+    background: var(--bg);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+    transition:
+      background-color 0.6s var(--ease-in-out-quart),
+      color 0.6s var(--ease-in-out-quart);
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  [data-theme="light"] :focus-visible {
+    outline-color: var(--fg);
+  }
+  img {
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+}
+
+/* Custom cursor active: hide the native one (fine pointers only, set by JS) */
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* ==================================================================
+   UTILITIES
+   ================================================================== */
+
+@utility container-page {
+  width: 100%;
+  max-width: 96rem; /* 1536px */
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 3rem);
+}
+
+@utility label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@utility card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--bg-elev);
+}
+
+@utility mask-fade-x {
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+/* Film grain */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1s steps(6) infinite;
+}
+@keyframes grain {
+  0%,
+  100% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -4%); }
+  60% { transform: translate(-4%, -1%); }
+  80% { transform: translate(3%, 3%); }
+}
+
+/* Animated underline for text links */
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.5s var(--ease-out-expo);
+}
+.link-underline:hover,
+.link-underline:focus-visible {
+  background-size: 100% 1px;
+  background-position: 0% 100%;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ==================================================================
+   REDUCED MOTION: keep simple fades, drop everything else
+   ================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  .grain {
+    animation: none;
+  }
+  .marquee-track {
+    animation: none !important;
+    transform: none !important;
+    flex-wrap: wrap;
+  }
+}
+
+/* ==================================================================
+   CURSOR
+   ================================================================== */
+
+.cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-soft);
+  --c: #fff;
+}
+.cursor[data-visible="true"] {
+  opacity: 1;
+}
+.cursor-pos {
+  position: fixed;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+.cursor-dot,
+.cursor-ring {
+  position: absolute;
+  translate: -50% -50%;
+  border-radius: 999px;
+  transition:
+    width 0.35s var(--ease-out-expo),
+    height 0.35s var(--ease-out-expo),
+    border-radius 0.35s var(--ease-out-expo),
+    background-color 0.25s var(--ease-soft),
+    border-color 0.25s var(--ease-soft),
+    opacity 0.25s var(--ease-soft),
+    scale 0.2s var(--ease-soft);
+}
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--c);
+}
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--c);
+  display: grid;
+  place-items: center;
+  color: #000;
+}
+.cursor[data-pressed="true"] .cursor-ring {
+  scale: 0.86;
+}
+.cursor-label,
+.cursor-icon,
+.cursor-pick {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-soft);
+}
+.cursor-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+.cursor-icon {
+  width: 22px;
+  height: 22px;
+}
+.cursor-play { fill: #000; }
+.cursor-arrow { stroke: #000; }
+.cursor-pick {
+  width: 100%;
+  height: 100%;
+  fill: var(--c);
+  scale: 1.05;
+}
+
+/* Hide dot for every "big" state */
+.cursor:not([data-state="default"]) .cursor-dot {
+  opacity: 0;
+}
+.cursor[data-state="hide"] {
+  opacity: 0;
+}
+
+.cursor[data-state="link"] .cursor-ring {
+  width: 56px;
+  height: 56px;
+  background: var(--c);
+}
+.cursor[data-state="view"] .cursor-ring {
+  width: 96px;
+  height: 96px;
+  background: var(--c);
+}
+.cursor[data-state="view"] .cursor-label,
+.cursor[data-state="pick"] .cursor-label,
+.cursor[data-state="play"] .cursor-play,
+.cursor[data-state="external"] .cursor-arrow,
+.cursor[data-state="pick"] .cursor-pick {
+  opacity: 1;
+}
+.cursor[data-state="play"] .cursor-ring {
+  width: 84px;
+  height: 84px;
+  background: var(--c);
+}
+.cursor[data-state="external"] .cursor-ring {
+  width: 64px;
+  height: 64px;
+  background: var(--c);
+}
+.cursor[data-state="image"] .cursor-ring {
+  width: 120px;
+  height: 120px;
+}
+.cursor[data-state="pick"] .cursor-ring {
+  width: 64px;
+  height: 70px;
+  border-color: transparent;
+  border-radius: 0;
+}
+.cursor[data-state="text"] .cursor-ring {
+  width: 2px;
+  height: 30px;
+  border-radius: 1px;
+  background: var(--c);
+  border-color: transparent;
+}
+
+.intro-skip .preloader {
+  display: none;
+}
+
+/* ==================================================================
+   HERO INTRO: pure CSS, so it starts at first paint (good LCP).
+   Triggered by <html class="intro-done">, which the boot script adds
+   when the preloader is skipped and the preloader adds as it splits.
+   ================================================================== */
+
+.hero-line {
+  transform: translate3d(0, 110%, 0);
+}
+.hero-fade {
+  opacity: 0;
+}
+.hero-cover {
+  transform: none;
+}
+.hero-portrait-img {
+  transform: scale(1.25);
+}
+.intro-done .hero-line {
+  animation: hero-line 1.2s var(--ease-out-expo) var(--d, 0s) both;
+}
+.intro-done .hero-fade {
+  animation: hero-fade 0.9s var(--ease-out-expo) var(--d, 0s) both;
+}
+.intro-done .hero-cover {
+  animation: hero-uncover 1.4s var(--ease-in-out-quart) 0.25s both;
+}
+.intro-done .hero-portrait-img {
+  animation: hero-zoom 1.8s var(--ease-out-expo) 0.25s both;
+}
+@keyframes hero-line {
+  from { transform: translate3d(0, 110%, 0); }
+  to { transform: none; }
+}
+@keyframes hero-fade {
+  from { opacity: 0; transform: translate3d(0, 16px, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes hero-uncover {
+  from { transform: none; }
+  to { transform: scaleY(0); }
+}
+@keyframes hero-zoom {
+  from { transform: scale(1.25); }
+  to { transform: none; }
+}
+
+@keyframes flow {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(200%); }
+}
