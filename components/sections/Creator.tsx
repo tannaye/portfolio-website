@@ -65,7 +65,7 @@ export function Creator() {
       </div>
 
       <div className="container-page relative mt-20 md:mt-28">
-        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {creator.platforms.map((p, i) => {
             const Icon = brandIcon[p.name];
             return (

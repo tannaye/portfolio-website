@@ -179,6 +179,7 @@ export const socials: Record<
   x: "https://x.com/tannaye_dev",
   instagram: "https://www.instagram.com/tannaye.dev/",
   tiktok: "https://www.tiktok.com/@tannaye.dev",
+  youtube: "https://www.youtube.com/@tannaye",
 };
 
 export const nav = [
@@ -768,12 +769,44 @@ export const creator = {
   lede: "Technology, ideas and the things I'm curious about. I explain software the way I wish it had been explained to me.",
   cards: [photos.mic, photos.frame, photos.couch],
   platforms: [
-    { name: "Instagram", handle: "@tannaye.dev", href: socials.instagram, followers: null, blurb: "Short explainers and behind-the-scenes." },
-    { name: "TikTok", handle: "@tannaye.dev", href: socials.tiktok, followers: null, blurb: "Quick takes on tech, AI and dev life." },
-    { name: "X", handle: "@tannaye_dev", href: socials.x, followers: null, blurb: "Thoughts in progress." },
-    { name: "LinkedIn", handle: "Victor Iwatannaye", href: socials.linkedin, followers: null, blurb: "The professional side." },
+    {
+      name: "YouTube",
+      handle: "@tannaye",
+      href: socials.youtube,
+      followers: null,
+      blurb: "Longer videos on tech, software and AI.",
+    },
+    {
+      name: "Instagram",
+      handle: "@tannaye.dev",
+      href: socials.instagram,
+      followers: null,
+      blurb: "Short explainers and behind-the-scenes.",
+    },
+    {
+      name: "TikTok",
+      handle: "@tannaye.dev",
+      href: socials.tiktok,
+      followers: null,
+      blurb: "Quick takes on tech, AI and dev life.",
+    },
+    {
+      name: "X",
+      handle: "@tannaye_dev",
+      href: socials.x,
+      followers: null,
+      blurb: "Thoughts in progress.",
+    },
+    {
+      name: "LinkedIn",
+      handle: "Victor Iwatannaye",
+      href: socials.linkedin,
+      followers: null,
+      blurb: "The professional side.",
+    },
   ] satisfies Platform[],
-  collab: "Brands and teams building for developers: let's make something worth watching.",
+  collab:
+    "Brands and teams building for developers: let's make something worth watching.",
 };
 
 /* ------------------------------------------------------------------ */

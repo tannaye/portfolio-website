@@ -95,6 +95,11 @@ export const Instagram = (p: P) => (
     <circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none" />
   </svg>
 );
+export const YouTube = (p: P) => (
+  <svg {...base(p)} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M22.5 6.8a2.9 2.9 0 0 0-2-2C18.7 4.3 12 4.3 12 4.3s-6.7 0-8.5.5a2.9 2.9 0 0 0-2 2C1 8.6 1 12 1 12s0 3.4.5 5.2a2.9 2.9 0 0 0 2 2c1.8.5 8.5.5 8.5.5s6.7 0 8.5-.5a2.9 2.9 0 0 0 2-2c.5-1.8.5-5.2.5-5.2s0-3.4-.5-5.2ZM9.8 15.4V8.6l5.8 3.4-5.8 3.4Z" />
+  </svg>
+);
 export const TikTok = (p: P) => (
   <svg {...base(p)} viewBox="0 0 24 24" fill="currentColor">
     <path d="M16.6 3c.3 2.2 1.6 3.6 3.9 3.8v3.1c-1.4.1-2.7-.3-3.9-1.1v5.9c0 3.9-3.2 6.3-6.5 5.8-2.7-.4-4.6-2.7-4.6-5.5 0-3.4 3-6 6.6-5.4v3.2c-1.6-.5-3.3.6-3.3 2.3 0 1.4 1.1 2.5 2.4 2.5 1.5 0 2.5-1.1 2.5-2.7V3h2.9Z" />
@@ -119,6 +124,7 @@ export const GitHub = (p: P) => (
 export const brandIcon = {
   Instagram,
   TikTok,
+  YouTube,
   X: XLogo,
   LinkedIn,
   GitHub,

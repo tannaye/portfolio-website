@@ -14,6 +14,7 @@ import { brandIcon } from "./ui/Icons";
 const socialList = [
   { name: "Instagram", href: socials.instagram },
   { name: "TikTok", href: socials.tiktok },
+  { name: "YouTube", href: socials.youtube },
   { name: "X", href: socials.x },
   { name: "LinkedIn", href: socials.linkedin },
   { name: "GitHub", href: socials.github },

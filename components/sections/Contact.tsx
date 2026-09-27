@@ -17,6 +17,7 @@ const SOCIAL = [
   { name: "X", href: socials.x },
   { name: "Instagram", href: socials.instagram },
   { name: "TikTok", href: socials.tiktok },
+  { name: "YouTube", href: socials.youtube },
 ] as const;
 
 export function Contact() {
