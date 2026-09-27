@@ -126,7 +126,7 @@ export const site = {
   url: "https://tannaye.dev",
   title: "Victor Iwatannaye — Software Engineer, AI Engineer & Creator",
   description:
-    "Senior software engineer building production backend systems, fintech platforms and AI-powered products. Also Tannaye: technology content creator and guitarist, based in Lagos.",
+    "Senior software engineer building production backend systems, fintech platforms and AI-powered products. Also Tannaye: technology content creator, based in Lagos.",
   email: "iwatannayevictor@gmail.com",
   location: "Lagos, Nigeria",
   timezone: "Africa/Lagos",
@@ -135,10 +135,20 @@ export const site = {
   availabilityLabel: "Available for select opportunities",
   cv: "/victor-iwatannaye-cv.pdf",
   tagline: "Code. Strings. Stories.",
-  roles: ["Software Engineer", "AI Engineer", "Guitarist", "Content Creator"],
+  roles: [
+    "Software Engineer",
+    "AI Engineer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Full-Stack Developer",
+    "Content Creator",
+  ],
 };
 
-export const socials: Record<"github" | "linkedin" | "x" | "instagram" | "tiktok", string> = {
+export const socials: Record<
+  "github" | "linkedin" | "x" | "instagram" | "tiktok" | "youtube",
+  string
+> = {
   github: "https://github.com/tannaye",
   linkedin: "https://www.linkedin.com/in/victor-iwatannaye/",
   x: "https://x.com/tannaye_dev",
@@ -163,7 +173,7 @@ export const nav = [
 export const hero = {
   eyebrow: "Senior Software Engineer · AI Engineer · Creator",
   lines: ["I build software", "people can trust."],
-  body: "Six years designing backend systems for banks, lenders and fintech products, and more recently building real products with LLMs. Off the clock, I make videos and play guitar.",
+  body: "Over six years designing systems for banks, lenders and fintech products, and more recently building real products with LLMs. Off the clock, I catch cruise on social media and play the guitar.",
   primaryCta: { label: "View my work", href: "#work" },
   secondaryCta: { label: "Let's work together", href: "#contact" },
   portrait: photos.desk,

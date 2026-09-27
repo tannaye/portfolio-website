@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { ease } from "@/lib/motion";
 import { introStore } from "@/lib/store";
 
-const NAME = "VICTOR";
+const NAME = "Tannaye";
 
 /**
  * First-visit intro (< 2s): a 0–100 counter, the name letter by letter, then the
@@ -14,7 +14,9 @@ const NAME = "VICTOR";
  * so a skipped preloader never flashes.
  */
 export function Preloader() {
-  const [phase, setPhase] = useState<"count" | "name" | "split" | "done">("count");
+  const [phase, setPhase] = useState<"count" | "name" | "split" | "done">(
+    "count",
+  );
   const countRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -31,7 +33,8 @@ export function Preloader() {
       duration: 1,
       ease: ease.inOutQuart,
       onUpdate: (v) => {
-        if (countRef.current) countRef.current.textContent = String(Math.round(v)).padStart(3, "0");
+        if (countRef.current)
+          countRef.current.textContent = String(Math.round(v)).padStart(3, "0");
       },
     });
     timers.push(window.setTimeout(() => setPhase("name"), 650));
@@ -58,7 +61,10 @@ export function Preloader() {
   const split = phase === "split";
 
   return (
-    <div className="preloader pointer-events-none fixed inset-0 z-[110]" aria-hidden="true">
+    <div
+      className="preloader pointer-events-none fixed inset-0 z-[110]"
+      aria-hidden="true"
+    >
       {(["top", "bottom"] as const).map((half) => (
         <m.div
           key={half}
@@ -80,7 +86,11 @@ export function Preloader() {
               className="inline-block"
               initial={{ y: "105%" }}
               animate={{ y: phase === "count" ? "105%" : "0%" }}
-              transition={{ duration: 0.6, ease: ease.outExpo, delay: i * 0.045 }}
+              transition={{
+                duration: 0.6,
+                ease: ease.outExpo,
+                delay: i * 0.045,
+              }}
             >
               {ch}
             </m.span>
