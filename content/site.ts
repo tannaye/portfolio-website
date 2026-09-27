@@ -72,7 +72,12 @@ export type JourneyEntry = {
   draft?: boolean;
 };
 
-export type Clip = { title: string; href: string; platform: "YouTube" | "Instagram" | "TikTok"; embedId?: string };
+export type Clip = {
+  title: string;
+  href: string;
+  platform: "YouTube" | "Instagram" | "TikTok";
+  embedId?: string;
+};
 
 /* ------------------------------------------------------------------ */
 /* Photography (credit: Assam Inc. via Pixieset)                       */
@@ -336,13 +341,24 @@ export const experience: Role[] = [
       "Moved slow work onto event-driven queues and integrated third-party payment and banking providers.",
       "Mentored engineers, ran code reviews and supported business-critical systems in production.",
     ],
-    stack: ["Node.js", "TypeScript", "NestJS", "PostgreSQL", "MySQL", "RabbitMQ", "Kafka", "AWS", "Docker"],
+    stack: [
+      "Node.js",
+      "TypeScript",
+      "NestJS",
+      "PostgreSQL",
+      "MySQL",
+      "RabbitMQ",
+      "Kafka",
+      "AWS",
+      "Docker",
+    ],
   },
   {
     company: "Kinly USA",
-    title: "Mobile Software Developer · Contract",
+    title: "Mobile Software Developer",
     period: "Sep 2021 — Feb 2022",
-    summary: "Worked on a digital banking app used by customers across multiple platforms.",
+    summary:
+      "Worked on a digital banking app used by customers across multiple platforms.",
     highlights: [
       "Worked with the backend teams on secure financial workflows and customer-facing features.",
       "Kept the app available and fast through proactive testing, monitoring and fast issue resolution.",
@@ -354,7 +370,8 @@ export const experience: Role[] = [
     company: "Leni Labs",
     title: "Full-Stack Software Developer",
     period: "Aug 2019 — Jan 2021",
-    summary: "Built web applications and backend systems for e-commerce, logistics and education platforms.",
+    summary:
+      "Built web applications and backend systems for e-commerce, logistics and education platforms.",
     highlights: [
       "Designed REST APIs supporting business operations and customer-facing apps.",
       "Built admin dashboards and reporting tools that made operations more efficient and easier to see.",
@@ -517,7 +534,14 @@ export const ai = {
       body: "Latency budgets, cost per call, rate limits and graceful degradation are designed in from day one, not bolted on later.",
     },
   ],
-  pipeline: ["Message", "LLM · tool call", "zod · TradingIntent", "Risk Engine · 11 rules", "Queue", "Execution"],
+  pipeline: [
+    "Message",
+    "LLM · tool call",
+    "zod · TradingIntent",
+    "Risk Engine · 11 rules",
+    "Queue",
+    "Execution",
+  ],
   featured: "ai-trading-assistant",
 };
 
@@ -526,12 +550,31 @@ export const stack = {
   title: "Tools I reach for.",
   groups: [
     { name: "Languages", items: ["TypeScript", "JavaScript", "Go", "PHP"] },
-    { name: "Backend", items: ["Node.js", "NestJS", "Express", "AdonisJS", "REST", "Microservices"] },
-    { name: "Data", items: ["PostgreSQL", "MySQL", "MongoDB", "Redis", "Firebase"] },
+    {
+      name: "Backend",
+      items: [
+        "Node.js",
+        "NestJS",
+        "Express",
+        "AdonisJS",
+        "REST",
+        "Microservices",
+      ],
+    },
+    {
+      name: "Data",
+      items: ["PostgreSQL", "MySQL", "MongoDB", "Redis", "Firebase"],
+    },
     { name: "Messaging", items: ["RabbitMQ", "Kafka", "BullMQ"] },
-    { name: "Infrastructure", items: ["AWS", "Docker", "Kubernetes", "DigitalOcean", "CI/CD"] },
+    {
+      name: "Infrastructure",
+      items: ["AWS", "Docker", "Kubernetes", "DigitalOcean", "CI/CD"],
+    },
     { name: "Frontend", items: ["React", "React Native", "Next.js", "Redux"] },
-    { name: "AI", items: ["LLMs", "Tool calling", "AI agents", "Structured outputs", "RAG"] },
+    {
+      name: "AI",
+      items: ["LLMs", "Tool calling", "AI agents", "Structured outputs", "RAG"],
+    },
     { name: "Quality", items: ["Jest", "Mocha", "TDD"] },
   ],
 };
@@ -540,12 +583,30 @@ export const leadership = {
   label: "Leadership",
   title: "Seniority is mostly the invisible work.",
   items: [
-    { title: "Architecture", body: "Designed the microservice and event-driven foundations that fintech products run on." },
-    { title: "Standards", body: "Created the templates and engineering standards teams build from, cutting setup time in half." },
-    { title: "Mentorship", body: "Mentored engineers and ran code reviews focused on correctness and maintainability." },
-    { title: "Technical decisions", body: "Led engineering teams through technical decisions, from database design to deployment." },
-    { title: "Product partnership", body: "Worked closely with product, design and QA to ship business-critical features." },
-    { title: "Production ownership", body: "Stayed on the hook after launch, troubleshooting critical issues and keeping platforms up." },
+    {
+      title: "Architecture",
+      body: "Designed the microservice and event-driven foundations that fintech products run on.",
+    },
+    {
+      title: "Standards",
+      body: "Created the templates and engineering standards teams build from, cutting setup time in half.",
+    },
+    {
+      title: "Mentorship",
+      body: "Mentored engineers and ran code reviews focused on correctness and maintainability.",
+    },
+    {
+      title: "Technical decisions",
+      body: "Led engineering teams through technical decisions, from database design to deployment.",
+    },
+    {
+      title: "Product partnership",
+      body: "Worked closely with product, design and QA to ship business-critical features.",
+    },
+    {
+      title: "Production ownership",
+      body: "Stayed on the hook after launch, troubleshooting critical issues and keeping platforms up.",
+    },
   ],
 };
 
@@ -573,7 +634,10 @@ export const creator = {
 
 export const music = {
   label: "Music",
-  title: ["Guitar has nothing to do with software.", "And somehow, it has everything to do with it."],
+  title: [
+    "Guitar has nothing to do with software.",
+    "And somehow, it has everything to do with it.",
+  ],
   body: "Six strings, a lot of patience, and the same loop I know from engineering: practise, listen, fix the part that's off, repeat. It's where I go to think without a screen.",
   photo: photos.guitar,
   wide: photos.couch,
@@ -590,8 +654,18 @@ export const music = {
 export const gallery = {
   label: "Gallery",
   title: "Off the clock, on camera.",
-  photos: [photos.frame, photos.guitar, photos.desk, photos.couch, photos.mic, photos.trio],
-  credit: { name: "Assam Inc.", href: "https://assaminc7072.pixieset.com/fela/" },
+  photos: [
+    photos.frame,
+    photos.guitar,
+    photos.desk,
+    photos.couch,
+    photos.mic,
+    photos.trio,
+  ],
+  credit: {
+    name: "Assam Inc.",
+    href: "https://assaminc7072.pixieset.com/fela/",
+  },
 };
 
 export const contact = {
