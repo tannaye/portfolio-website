@@ -65,6 +65,8 @@ export type JourneyEntry = {
   story: string;
   /** Things made that year, shown as tags under the story. */
   built?: string[];
+  /** Starts a new chapter (era) of the story from this year onward. */
+  chapter?: string;
   /**
    * Draft entries are placeholders: visible in `npm run dev` (dashed, labelled)
    * and hidden in production builds. Delete `draft: true` to publish one.
@@ -233,6 +235,7 @@ export const journey = {
   entries: [
     {
       year: "2015",
+      chapter: "Learning to code",
       title: "First lines of code",
       story:
         "It started with QBasic. A few lines of code, and the moment a computer actually did what I told it to. I didn't know it yet, but I was hooked.",
@@ -249,7 +252,11 @@ export const journey = {
       title: "Hello, web",
       story:
         "My world got wider. I had my first real introduction to web development and tried building a website for the teens' church. At the same time I was learning Visual Basic, building an ATM machine simulator and an SGPA calculator, and picking up C along the way.",
-      built: ["Teens' church website", "ATM machine simulator", "SGPA calculator"],
+      built: [
+        "Teens' church website",
+        "ATM machine simulator",
+        "SGPA calculator",
+      ],
     },
     {
       year: "2018",
@@ -260,6 +267,7 @@ export const journey = {
     },
     {
       year: "2019",
+      chapter: "Finding my path",
       title: "Exploring, then choosing the web",
       story:
         "I spent 2019 testing other paths. I took cyber security courses and learnt a lot, right down to accessing the dark web. I tried networking and sat the HCNA exam. But the progress I wanted kept showing up in web development, so I went back to it, built a face recognition app, and joined Leni Labs as a full-stack developer.",
@@ -270,14 +278,21 @@ export const journey = {
       title: "A year of range",
       story:
         "2020 was a year of range. I built company websites for a media company and for an oil company merger, an app where people could hire tutors, an e-commerce app for artworks, and an e-library. Five very different problems, one year.",
-      built: ["Media company website", "Tutor-hiring app", "Artwork e-commerce app", "Oil company merger website", "E-library"],
+      built: [
+        "Media company website",
+        "Tutor-hiring app",
+        "Artwork e-commerce app",
+        "Oil company merger website",
+        "E-library",
+      ],
     },
     {
       year: "2021",
+      chapter: "Building fintech",
       title: "Into fintech",
       story:
-        "I moved into fintech. I joined Acumen Digital as a senior full-stack engineer, took on a contract with Kinly USA on a digital banking app, and built Awoof, an app for philanthropists to give, and Jeriod, a crypto exchange app.",
-      built: ["Awoof", "Jeriod"],
+        "I moved into fintech. I joined Acumen Digital as a senior full-stack engineer, took on a contract with Kinly USA on a digital banking app, and built Awoof, an app for philanthropists to give, and Jeroid, a crypto exchange app.",
+      built: ["Awoof", "Jeroid"],
     },
     {
       year: "2022",
@@ -309,10 +324,16 @@ export const journey = {
     },
     {
       year: "2026",
+      chapter: "Building with AI",
       title: "Building with AI, in public",
       story:
         "Now I'm building with AI, carefully. My AI-powered trading assistant lets the model work out what people mean, while a deterministic risk engine decides what actually happens. I've also built a couple of games, open-sourced a clean-architecture API foundation, and designed and built the site you're reading.",
-      built: ["AI Trading Assistant", "A couple of games", "Open-source API foundation", "This website"],
+      built: [
+        "AI Trading Assistant",
+        "A couple of games",
+        "Open-source API foundation",
+        "This website",
+      ],
     },
   ] satisfies JourneyEntry[],
 };
