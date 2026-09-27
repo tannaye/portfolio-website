@@ -362,9 +362,21 @@ export const journey = {
 
 export const stats = [
   { value: 6, suffix: "+", label: "Years building production software" },
-  { value: 30, suffix: "%+", label: "Platform performance gained through architecture and database work" },
-  { value: 50, suffix: "%", label: "Less project setup time with reusable backend templates" },
-  { value: 4, suffix: "", label: "Industries shipped for: fintech, logistics, e-commerce, education" },
+  {
+    value: 30,
+    suffix: "%+",
+    label: "Platform performance gained through architecture and database work",
+  },
+  {
+    value: 500,
+    suffix: "K+",
+    label: "Users across the products I've shipped",
+  },
+  {
+    value: 4,
+    suffix: "",
+    label: "Industries shipped for: fintech, logistics, e-commerce, education",
+  },
 ];
 
 export const experience: Role[] = [
