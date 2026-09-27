@@ -12,9 +12,9 @@ import { Magnetic } from "@/components/ui/Magnetic";
 import { useIsDesktop } from "@/lib/hooks";
 
 const PHONES = [
-  { platform: "Instagram", href: socials.instagram },
-  { platform: "TikTok", href: socials.tiktok },
-  { platform: "Instagram", href: socials.instagram },
+  { platform: "Instagram", href: socials.instagram, handle: "@tannaye.dev" },
+  { platform: "TikTok", href: socials.tiktok, handle: "@tannaye.dev" },
+  { platform: "X (Twitter)", href: socials.x, handle: "@tannaye_dev" },
 ] as const;
 
 export function Creator() {
@@ -122,6 +122,7 @@ function PhoneCard({
   desktop,
   platform,
   href,
+  handle,
 }: {
   i: number;
   photo: Photo;
@@ -129,6 +130,7 @@ function PhoneCard({
   desktop: boolean;
   platform: string;
   href: string;
+  handle: string;
 }) {
   const side = i - 1; // -1, 0, 1
   const spread = desktop ? 118 : 52;
@@ -158,7 +160,7 @@ function PhoneCard({
         <div className="absolute left-1/2 top-2 h-5 w-20 -translate-x-1/2 rounded-full bg-black" aria-hidden="true" />
         <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/80 to-transparent p-4 pt-16 text-white">
           <span>
-            <span className="block text-sm font-semibold">@{site.handle}</span>
+            <span className="block text-sm font-semibold">{handle}</span>
             <span className="label text-white/70">{platform}</span>
           </span>
           <span className="grid size-10 place-items-center rounded-full bg-white/20 backdrop-blur-md transition-colors group-hover:bg-[#ff6fab] group-hover:text-black">
