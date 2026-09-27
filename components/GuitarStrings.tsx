@@ -18,19 +18,47 @@ const SUBSTEPS = 4;
 const TENSION = 0.9;
 const DAMPING = 0.997;
 
-export type GuitarHandle = { pluck: (string: number, at?: number, strength?: number) => void };
+export type PluckOptions = {
+  /** Play this pitch instead of the open string (e.g. a fretted note). */
+  freq?: number;
+  /** Don't report the pluck to `onPluck` (used when the game itself plays). */
+  silent?: boolean;
+};
+
+export type GuitarHandle = { pluck: (string: number, at?: number, strength?: number, opts?: PluckOptions) => void };
+
+export type GuitarStringsProps = {
+  soundOn: boolean;
+  color: string;
+  onPluck?: (i: number) => void;
+  /** "sweep": pluck by crossing strings (free play). "tap": click/tap the nearest string (games). */
+  input?: "sweep" | "tap";
+  /** Strings to glow, e.g. the next note in a game. */
+  highlight?: number[];
+  /** Pitch override for user plucks, e.g. the fretted note a tune needs. */
+  getFreq?: (i: number) => number | undefined;
+};
 
 type Str = { y: Float32Array; v: Float32Array };
 
-export const GuitarStrings = forwardRef<GuitarHandle, { soundOn: boolean; color: string; onPluck?: (i: number) => void }>(
-  function GuitarStrings({ soundOn, color, onPluck }, handle) {
+export const GuitarStrings = forwardRef<GuitarHandle, GuitarStringsProps>(
+  function GuitarStrings({ soundOn, color, onPluck, input = "sweep", highlight = [], getFreq }, handle) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const reduced = usePrefersReducedMotion();
     const strings = useRef<Str[]>(TUNING.map(() => ({ y: new Float32Array(POINTS), v: new Float32Array(POINTS) })));
-    const audio = useRef<{ ctx: AudioContext; buffers: AudioBuffer[] } | null>(null);
+    const audio = useRef<{ ctx: AudioContext; buffers: AudioBuffer[]; byFreq: Map<number, AudioBuffer> } | null>(null);
     const soundRef = useRef(soundOn);
     const kick = useRef<() => void>(() => {});
+    // Latest props, read by long-lived event handlers.
+    const onPluckRef = useRef(onPluck);
+    const inputRef = useRef(input);
+    const highlightRef = useRef(highlight);
+    const getFreqRef = useRef(getFreq);
     soundRef.current = soundOn;
+    onPluckRef.current = onPluck;
+    inputRef.current = input;
+    highlightRef.current = highlight;
+    getFreqRef.current = getFreq;
 
     // Prepare audio on the first "sound on" (must follow a user gesture).
     useEffect(() => {
@@ -38,15 +66,19 @@ export const GuitarStrings = forwardRef<GuitarHandle, { soundOn: boolean; color:
       const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (!Ctx) return;
       const ctx = new Ctx();
-      audio.current = { ctx, buffers: TUNING.map((t) => karplusStrong(ctx, t.freq)) };
+      audio.current = { ctx, buffers: TUNING.map((t) => karplusStrong(ctx, t.freq)), byFreq: new Map() };
     }, [soundOn]);
 
-    const play = (i: number, pan: number, strength: number) => {
+    const play = (i: number, pan: number, strength: number, freq?: number) => {
       const a = audio.current;
       if (!soundRef.current || !a) return;
       if (a.ctx.state === "suspended") a.ctx.resume();
       const src = a.ctx.createBufferSource();
-      src.buffer = a.buffers[i];
+      if (freq) {
+        const key = Math.round(freq * 100);
+        if (!a.byFreq.has(key)) a.byFreq.set(key, karplusStrong(a.ctx, freq));
+        src.buffer = a.byFreq.get(key)!;
+      } else src.buffer = a.buffers[i];
       const gain = a.ctx.createGain();
       gain.gain.value = 0.18 + 0.5 * Math.min(1, strength);
       const panner = a.ctx.createStereoPanner?.();
@@ -58,7 +90,7 @@ export const GuitarStrings = forwardRef<GuitarHandle, { soundOn: boolean; color:
       src.start();
     };
 
-    const pluck = (i: number, at = 0.5, strength = 0.7) => {
+    const pluck = (i: number, at = 0.5, strength = 0.7, opts: PluckOptions = {}) => {
       const s = strings.current[i];
       const center = Math.round(at * (POINTS - 1));
       const amp = (10 + strength * 16) * (i % 2 ? 1 : -1);
@@ -66,12 +98,16 @@ export const GuitarStrings = forwardRef<GuitarHandle, { soundOn: boolean; color:
         const d = (p - center) / 6;
         s.v[p] += amp * Math.exp(-d * d) * 0.35;
       }
-      play(i, at * 2 - 1, strength);
-      onPluck?.(i);
+      play(i, at * 2 - 1, strength, opts.freq ?? getFreqRef.current?.(i));
+      if (!opts.silent) onPluckRef.current?.(i);
       kick.current();
     };
 
     useImperativeHandle(handle, () => ({ pluck }));
+
+    // Redraw when the glowing strings change, even if nothing is vibrating.
+    const highlightKey = highlight.join(",");
+    useEffect(() => kick.current(), [highlightKey]);
 
     useEffect(() => {
       const canvas = canvasRef.current!;
@@ -113,6 +149,20 @@ export const GuitarStrings = forwardRef<GuitarHandle, { soundOn: boolean; color:
 
       const draw = () => {
         ctx2d.clearRect(0, 0, w, h);
+        for (const i of highlightRef.current) {
+          const base = lineY(i);
+          ctx2d.save();
+          ctx2d.strokeStyle = color;
+          ctx2d.shadowColor = color;
+          ctx2d.shadowBlur = 18;
+          ctx2d.globalAlpha = 0.28;
+          ctx2d.lineWidth = 12;
+          ctx2d.beginPath();
+          ctx2d.moveTo(0, base);
+          ctx2d.lineTo(w, base);
+          ctx2d.stroke();
+          ctx2d.restore();
+        }
         strings.current.forEach((s, i) => {
           const base = lineY(i);
           let e = 0;
@@ -155,7 +205,7 @@ export const GuitarStrings = forwardRef<GuitarHandle, { soundOn: boolean; color:
         const x = e.clientX - r.left;
         const y = e.clientY - r.top;
         const t = performance.now();
-        if (last) {
+        if (last && inputRef.current === "sweep") {
           const speed = Math.hypot(x - last.x, y - last.y) / Math.max(1, t - last.t);
           for (let i = 0; i < TUNING.length; i++) {
             const ly = lineY(i);
@@ -169,7 +219,7 @@ export const GuitarStrings = forwardRef<GuitarHandle, { soundOn: boolean; color:
       };
       const onLeave = () => (last = null);
       const onDown = (e: PointerEvent) => {
-        if (e.pointerType === "mouse") return;
+        if (e.pointerType === "mouse" && inputRef.current === "sweep") return;
         const r = canvas.getBoundingClientRect();
         const y = e.clientY - r.top;
         let best = 0;
@@ -206,7 +256,11 @@ export const GuitarStrings = forwardRef<GuitarHandle, { soundOn: boolean; color:
       <canvas
         ref={canvasRef}
         role="img"
-        aria-label="Six guitar strings. Move the cursor across them, or tap one, to pluck it."
+        aria-label={
+          input === "tap"
+            ? "Six guitar strings. Click or tap a string, press keys 1 to 6, or use the string buttons."
+            : "Six guitar strings. Move the cursor across them, or tap one, to pluck it."
+        }
         className="block h-full w-full touch-pan-y"
       />
     );

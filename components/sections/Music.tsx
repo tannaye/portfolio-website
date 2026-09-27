@@ -2,27 +2,16 @@
 
 import { m, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { music } from "@/content/site";
 import { FadeIn } from "@/components/animations/FadeIn";
 import { Parallax } from "@/components/animations/Parallax";
 import { RevealLines } from "@/components/animations/RevealLines";
-import dynamic from "next/dynamic";
-import type { GuitarHandle } from "@/components/GuitarStrings";
-import { TUNING } from "@/lib/tuning";
-import { ArrowUpRight, Play, Volume, VolumeOff } from "@/components/ui/Icons";
-import { cn } from "@/lib/cn";
-
-const STRING_COLOR = "#eba44a";
-
-// Canvas + audio code is only needed once the section is near; keep it out of the first bundle.
-const GuitarStrings = dynamic(() => import("@/components/GuitarStrings").then((m) => m.GuitarStrings), { ssr: false });
+import { GuitarPlayer } from "@/components/GuitarPlayer";
+import { ArrowUpRight, Play } from "@/components/ui/Icons";
 
 export function Music() {
   const ref = useRef<HTMLElement>(null);
-  const guitar = useRef<GuitarHandle>(null);
-  const [soundOn, setSoundOn] = useState(false);
-  const [lastString, setLastString] = useState<number | null>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "start 0.2"] });
   const glow = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
@@ -70,70 +59,8 @@ export function Music() {
 
         {/* Player */}
         <div className="container-page relative mt-16 md:mt-24">
-          <FadeIn className="overflow-hidden rounded-card-lg border border-white/10 bg-black/25 backdrop-blur-sm">
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-5 py-4 md:px-6">
-              <div className="flex items-center gap-4">
-                <span className="grid size-9 place-items-center rounded-full bg-[#eba44a] text-[#1c1108]">
-                  <Play width={14} height={14} />
-                </span>
-                <div>
-                  <p className="text-sm font-medium">Six strings, standard tuning</p>
-                  <p className="label text-fg-subtle">
-                    <span className="hidden md:inline">Move your cursor across the strings</span>
-                    <span className="md:hidden">Tap a string</span>
-                    {lastString !== null && (
-                      <span className="text-[#eba44a]">
-                        {" "}
-                        · {TUNING[lastString].name}
-                        {TUNING[lastString].octave}
-                      </span>
-                    )}
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSoundOn((s) => !s)}
-                aria-pressed={soundOn}
-                className={cn(
-                  "label flex h-10 items-center gap-2 rounded-full border px-4 transition-colors",
-                  soundOn ? "border-[#eba44a] bg-[#eba44a] text-[#1c1108]" : "border-white/20 text-fg hover:border-white/50",
-                )}
-              >
-                {soundOn ? <Volume width={16} height={16} /> : <VolumeOff width={16} height={16} />}
-                Sound {soundOn ? "on" : "off"}
-              </button>
-            </div>
-
-            <div data-cursor="pick" className="relative h-72 md:h-96">
-              <GuitarStrings ref={guitar} soundOn={soundOn} color={STRING_COLOR} onPluck={setLastString} />
-              {/* fret markers */}
-              <div aria-hidden="true" className="pointer-events-none absolute inset-y-6 left-[8%] w-px bg-white/10" />
-              <div aria-hidden="true" className="pointer-events-none absolute inset-y-6 right-[8%] w-px bg-white/10" />
-            </div>
-
-            <div className="flex items-center justify-between gap-4 border-t border-white/10 px-5 py-3 md:px-6">
-              <span className="label text-fg-subtle">Pluck</span>
-              <ul className="flex gap-1.5">
-                {TUNING.map((t, i) => (
-                  <li key={i}>
-                    <button
-                      type="button"
-                      onClick={() => guitar.current?.pluck(i, 0.5, 0.8)}
-                      aria-label={`Pluck the ${t.name}${t.octave} string`}
-                      data-cursor="pick"
-                      className={cn(
-                        "label grid size-10 place-items-center rounded-full border transition-colors",
-                        lastString === i ? "border-[#eba44a] text-[#eba44a]" : "border-white/15 text-fg-muted hover:text-fg",
-                      )}
-                    >
-                      {t.name}
-                      <sub className="text-[0.55rem]">{t.octave}</sub>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <FadeIn>
+            <GuitarPlayer />
           </FadeIn>
         </div>
 

@@ -529,3 +529,7 @@ html.lenis body {
   0%, 100% { left: 4%; }
   50% { left: 78%; }
 }
+@keyframes la-rush {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-20%); }
+}
