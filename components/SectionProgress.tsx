@@ -38,6 +38,23 @@ export function SectionProgress() {
     return () => io.disconnect();
   }, []);
 
+  // Keep the URL on the section you're reading, so a reload or a shared link lands
+  // there instead of on whichever section was last clicked. replaceState, not
+  // pushState: scrolling shouldn't fill the back button with entries.
+  const [syncing, setSyncing] = useState(false);
+  useEffect(() => {
+    // Wait until the page has landed on any incoming #hash (see SmoothScroll),
+    // or the first "top" reading would wipe it before it's read.
+    const id = window.setTimeout(() => setSyncing(true), 900);
+    return () => window.clearTimeout(id);
+  }, []);
+  useEffect(() => {
+    if (!syncing) return;
+    const url = active === "top" ? window.location.pathname + window.location.search : `#${active}`;
+    const current = window.location.hash.slice(1) || "top";
+    if (current !== active) window.history.replaceState(window.history.state, "", url);
+  }, [active, syncing]);
+
   return (
     <>
       <m.div
