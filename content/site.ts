@@ -30,7 +30,13 @@ export type Role = {
   stack: string[];
 };
 
-export type ProjectCategory = "AI" | "Fintech" | "Logistics" | "Products";
+export type ProjectCategory =
+  | "AI"
+  | "Fintech"
+  | "Logistics"
+  | "Products"
+  | "Marketplace"
+  | "Energy";
 
 export type Project = {
   slug: string;
@@ -45,11 +51,23 @@ export type Project = {
   /** Visual treatment when there is no image. */
   tone: "blue" | "lime" | "amber" | "magenta";
   link: { label: string; href: string } | null;
+  /** Live product: use its animated cover instead of the diagram cover. */
+  art?: LiveArtKind;
   caseStudy: { problem: string; approach: string[]; impact: string[] };
 };
 
+/** Bespoke animated covers in components/LiveArt.tsx, for products that are live. */
+export type LiveArtKind =
+  | "trading"
+  | "tendar"
+  | "oneport"
+  | "focus"
+  | "jeroid"
+  | "artgidi"
+  | "ktv";
+
 export type Platform = {
-  name: "Instagram" | "TikTok" | "X" | "LinkedIn" | "GitHub";
+  name: "YouTube" | "Instagram" | "TikTok" | "X" | "LinkedIn" | "GitHub";
   handle: string;
   href: string;
   /** Hard-code a real number like "12.4K", or leave null to hide it. */
@@ -409,15 +427,30 @@ export const projects: Project[] = [
     category: "AI",
     year: "2026",
     role: "Solo · Architecture & build",
-    summary: "Control MetaTrader 5 accounts through WhatsApp or Telegram in plain language.",
-    impact: "The LLM never places a trade. It only turns language into structured intent, and a deterministic risk engine decides.",
-    stack: ["TypeScript", "OpenAI function calling", "zod", "BullMQ", "Redis", "MongoDB", "MQL5", "Docker"],
+    summary:
+      "Control MetaTrader 5 accounts through WhatsApp or Telegram in plain language.",
+    impact:
+      "The LLM never places a trade. It only turns language into structured intent, and a deterministic risk engine decides.",
+    stack: [
+      "TypeScript",
+      "OpenAI function calling",
+      "zod",
+      "BullMQ",
+      "Redis",
+      "MongoDB",
+      "MQL5",
+      "Docker",
+    ],
     image: null,
     tone: "lime",
-    link: { label: "View on GitHub", href: "https://github.com/tannaye/ai-trading-assistant" },
+    art: "trading",
+    link: {
+      label: "View on GitHub",
+      href: "https://github.com/tannaye/ai-trading-assistant",
+    },
     caseStudy: {
       problem:
-        "Chat is the most natural interface for a trader, and the most dangerous. A language model that misreads \"close half\" as \"close all\" costs real money. The challenge was to get the convenience of natural language without handing the model any authority.",
+        'Chat is the most natural interface for a trader, and the most dangerous. A language model that misreads "close half" as "close all" costs real money. The challenge was to get the convenience of natural language without handing the model any authority.',
       approach: [
         "Strict Clean Architecture: the domain knows nothing about Express, OpenAI, Telegram or Redis. Every adapter plugs into a port.",
         "The LLM interprets messages via function calling into a zod-validated TradingIntent, with retries and a safe fallback when output doesn't validate.",
@@ -432,17 +465,58 @@ export const projects: Project[] = [
     },
   },
   {
+    slug: "tendar",
+    name: "Tendar",
+    category: "Fintech",
+    year: "2022 → now",
+    role: "Backend lead · Credit scoring",
+    summary:
+      "Lending-as-a-Service and credit scoring: all-in-one lending software for modern lenders.",
+    impact:
+      "Credit decisions, KYC, disbursement and recovery in one stack, with event-driven workflows that stay resilient under load.",
+    stack: ["NestJS", "TypeScript", "PostgreSQL", "RabbitMQ", "Kafka", "Redis"],
+    image: null,
+    tone: "amber",
+    art: "tendar",
+    link: { label: "Visit tendar.co", href: "https://tendar.co/" },
+    caseStudy: {
+      problem:
+        "Lending touches scoring, KYC, disbursement, repayments and third-party checks, and many of those calls are slow or unreliable. Lenders needed all of it in one place, and running it all in the request path would make the whole platform fragile.",
+      approach: [
+        "Built the credit scoring system: the engine every lending decision depends on.",
+        "Designed a microservice architecture with clear ownership boundaries for lending, scoring and transactions.",
+        "Moved slow and failure-prone work onto asynchronous, event-driven workflows over message queues.",
+        "Built secure REST APIs for partners consuming lending as a service.",
+      ],
+      impact: [
+        "Tendar V1 launched in 2023 as lending infrastructure for lending technologies and apps.",
+        "Better platform reliability, maintainability and performance.",
+        "Part of the architecture and database work behind 30%+ platform performance gains.",
+      ],
+    },
+  },
+  {
     slug: "digital-banking-focus-mfb",
     name: "Digital Banking for Focus MFB",
     category: "Fintech",
     year: "2021 — Present",
     role: "Backend engineer · Acumen Digital",
-    summary: "Secure APIs and backend services behind customer-facing and operational banking.",
-    impact: "Customer onboarding, account management and transaction workflows for a microfinance bank.",
-    stack: ["Node.js", "TypeScript", "PostgreSQL", "Microservices", "AWS", "Docker"],
+    summary:
+      "Secure APIs and backend services behind customer-facing and operational banking.",
+    impact:
+      "Customer onboarding, account management and transaction workflows for a microfinance bank.",
+    stack: [
+      "Node.js",
+      "TypeScript",
+      "PostgreSQL",
+      "Microservices",
+      "AWS",
+      "Docker",
+    ],
     image: null,
     tone: "blue",
-    link: null,
+    art: "focus",
+    link: { label: "Visit focusmfb.com", href: "https://www.focusmfb.com/" },
     caseStudy: {
       problem:
         "A bank's digital product has two audiences: customers who need things to be simple, and operations teams who need things to be correct. The backend has to serve both, securely, with no room for inconsistency.",
@@ -458,77 +532,118 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "lending-as-a-service",
-    name: "Lending-as-a-Service & Credit Scoring",
+    slug: "jeroid",
+    name: "Jeroid",
     category: "Fintech",
-    year: "2021 — Present",
-    role: "Backend lead · Acumen Digital",
-    summary: "APIs for loan origination, credit scoring and financial transaction processing.",
-    impact: "Event-driven workflows that keep loan processing resilient under load.",
-    stack: ["NestJS", "TypeScript", "PostgreSQL", "RabbitMQ", "Kafka", "Redis"],
-    image: null,
-    tone: "amber",
-    link: null,
-    caseStudy: {
-      problem:
-        "Lending touches scoring, disbursement, repayments and third-party checks, and many of those calls are slow or unreliable. Running them all in the request path makes the whole platform fragile.",
-      approach: [
-        "Designed a microservice architecture with clear ownership boundaries for lending, scoring and transactions.",
-        "Moved slow and failure-prone work onto asynchronous, event-driven workflows over message queues.",
-        "Built secure REST APIs for partners consuming lending as a service.",
-      ],
-      impact: [
-        "Better platform reliability, maintainability and performance.",
-        "Part of the architecture and database work behind 30%+ platform performance gains.",
-      ],
-    },
-  },
-  {
-    slug: "clean-api-foundation",
-    name: "Clean API Foundation",
-    category: "Products",
-    year: "2026",
-    role: "Author · Open source",
-    summary: "A production-ready Express + TypeScript starting point built on Clean Architecture.",
-    impact: "The idea behind the reusable templates that cut backend setup time by 50%, published openly.",
-    stack: ["Express 5", "TypeScript", "MongoDB", "Redis", "JWT", "AES-256-GCM", "Docker"],
+    year: "2021",
+    role: "Built the app",
+    summary:
+      "A crypto exchange app: trade crypto, redeem gift cards for cash and pay bills in one place.",
+    impact: "One app for digital assets, gift cards and everyday bills.",
+    stack: [],
     image: null,
     tone: "magenta",
-    link: { label: "View on GitHub", href: "https://github.com/tannaye/node-ts-boilerplate" },
+    art: "jeroid",
+    link: { label: "Visit jeroid.co", href: "https://www.jeroid.co/" },
     caseStudy: {
       problem:
-        "Every new backend service used to start with the same week of setup: auth, errors, validation, logging, caching, encryption. Done differently each time, it drifted.",
+        "Trading crypto and gift cards usually means juggling several platforms, rates and a lot of trust. Jeroid set out to put it all, plus everyday bills, in one app people could rely on.",
       approach: [
-        "Domain, use cases, adapters and infrastructure in strict layers, with dependencies pointing inward.",
-        "Auth built in: JWT with encrypted payloads, token caching in Redis, password reset flows.",
-        "Typed HTTP errors, a generic paginated repository, a lightweight DI container, Winston logging.",
+        "Digital assets: save, buy, sell and send crypto from one wallet.",
+        "Gift cards: redeem unused cards for cash.",
+        "Utility bills: airtime, data and bills paid from the same balance.",
+        "Trade Chat: a secured OTC desk for larger trades.",
       ],
       impact: [
-        "New services start from a consistent, secure baseline.",
-        "Engineers spend their first day on the product, not the plumbing.",
+        "Live at jeroid.co: crypto, gift cards and bills in one app.",
+        "Jeroid describes itself as trusted by 500,000+ users.",
       ],
     },
   },
   {
-    slug: "logistics-operations",
-    name: "Logistics Operations Platform",
+    slug: "oneport365",
+    name: "OnePort365",
     category: "Logistics",
-    year: "2019 — 2021",
-    role: "Full-stack developer · Leni Labs",
-    summary: "APIs, dashboards and geolocation for logistics and e-commerce operations.",
-    impact: "Gave operations teams clear visibility through admin dashboards and reporting.",
-    stack: ["Node.js", "Express", "React", "MongoDB", "Maps & geolocation APIs"],
+    year: "",
+    role: "Full-stack developer",
+    summary:
+      "A logistics operations platform: freight for Africa's traders, from port to warehouse.",
+    impact:
+      "Gave operations teams clear visibility through admin dashboards, reporting and GPS-tracked haulage.",
+    stack: [
+      "Node.js",
+      "Express",
+      "React",
+      "MongoDB",
+      "Maps & geolocation APIs",
+    ],
     image: null,
     tone: "blue",
-    link: null,
+    art: "oneport",
+    link: { label: "Visit oneport365.com", href: "https://oneport365.com/" },
     caseStudy: {
-      problem: "Operations teams were coordinating deliveries without a clear view of what was happening on the ground.",
+      problem:
+        "Moving freight into Africa means ocean, air and road legs, ports like Apapa and Tin Can, and a lot of paperwork. Operations teams were coordinating it without a clear view of what was happening on the ground.",
       approach: [
         "Designed REST APIs supporting business operations and customer-facing applications.",
         "Integrated mapping and geolocation services into logistics workflows.",
         "Built admin dashboards and reporting tools for day-to-day operations.",
       ],
-      impact: ["Improved operational efficiency and business visibility."],
+      impact: [
+        "Improved operational efficiency and business visibility.",
+        "Live at oneport365.com: ocean, air and haulage into Lagos, Tema and Mombasa, with real-time tracking.",
+      ],
+    },
+  },
+  {
+    slug: "ktv-vaos",
+    name: "KTV Vaos",
+    category: "Energy",
+    year: "",
+    role: "",
+    summary: "Company website for an oil and gas servicing company.",
+    impact:
+      "A clear home for KTVVAOS's tank, pipeline, construction and inspection services.",
+    stack: [],
+    image: null,
+    tone: "amber",
+    art: "ktv",
+    link: { label: "Visit ktvvaos.com", href: "https://www.ktvvaos.com/" },
+    caseStudy: {
+      problem:
+        "KTVVAOS offers a wide, technical range of services, from automated tank cleaning to non-destructive testing. The website had to make that range easy to understand for clients and partners.",
+      approach: [
+        "Services organised into clear groups: tanks and pipelines, automated tank cleaning, construction, and inspection & testing.",
+        "Their automated, closed-loop tank cleaning up front: desludging, oil recovery and cleaning in a single system.",
+        "Safety and environmental commitments given their own place, not buried in a footer.",
+      ],
+      impact: ["Live at ktvvaos.com."],
+    },
+  },
+  {
+    slug: "artgidi",
+    name: "Artgidi",
+    category: "Marketplace",
+    year: "",
+    role: "",
+    summary: "An online marketplace for authentic African art.",
+    impact:
+      "Paintings, sculpture, photography and more from artists across Africa, in one place.",
+    stack: [],
+    image: null,
+    tone: "amber",
+    art: "artgidi",
+    link: { label: "Visit artgidi.com", href: "https://artgidi.com/" },
+    caseStudy: {
+      problem:
+        "Buying original African art online is hard to browse and hard to trust. Collectors need confidence in what they're buying, and artists need a way to reach buyers far beyond their city.",
+      approach: [
+        "A catalogue across nine categories, from painting and sculpture to beadwork and textile, with artist and curator pages.",
+        "Commissions: a buyer describes an idea, and an artist brings it to life.",
+        "Editions, gifts and auctions alongside direct sales.",
+        "Secure transactions and free 14-day returns for peace of mind.",
+      ],
+      impact: ["Live at artgidi.com, with more than 1,300 artworks listed."],
     },
   },
 ];

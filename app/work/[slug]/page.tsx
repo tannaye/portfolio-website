@@ -37,7 +37,7 @@ export default async function CaseStudy({ params }: Props) {
     { k: "Category", v: project.category },
     { k: "Year", v: project.year },
     { k: "Role", v: project.role },
-  ];
+  ].filter((m) => m.v);
 
   return (
     <>
@@ -79,14 +79,18 @@ export default async function CaseStudy({ params }: Props) {
               <div className="lg:sticky lg:top-32">
                 <p className="label text-fg-subtle">Impact in one line</p>
                 <p className="mt-4 font-serif text-[clamp(1.5rem,2.4vw,2.25rem)] leading-[1.15] italic text-balance">{project.impact}</p>
-                <p className="label mt-10 text-fg-subtle">Technology</p>
-                <ul className="mt-4 flex flex-wrap gap-2">
-                  {project.stack.map((t) => (
-                    <li key={t} className="label rounded-full border border-line px-3 py-1.5 text-fg-muted">
-                      {t}
-                    </li>
-                  ))}
-                </ul>
+                {project.stack.length > 0 && (
+                  <>
+                    <p className="label mt-10 text-fg-subtle">Technology</p>
+                    <ul className="mt-4 flex flex-wrap gap-2">
+                      {project.stack.map((t) => (
+                        <li key={t} className="label rounded-full border border-line px-3 py-1.5 text-fg-muted">
+                          {t}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
                 {project.link && (
                   <div className="mt-10">
                     <Button href={project.link.href}>{project.link.label}</Button>
