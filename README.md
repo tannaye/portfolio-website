@@ -50,7 +50,6 @@ Node 20+ is required.
 - `creator.platforms[].followers`: real follower counts (hidden until set, never faked).
 - `music.clips`: links to performance videos. Until then, a card links to Instagram.
 - Project `link`s for the Acumen / Leni Labs work, if any are public.
-- The CV's email hyperlink points to `victoriwatannaye@gmail.com`, while its visible text says `iwatannayevictor@gmail.com`. The site uses the visible one; double-check which is correct.
 
 ## Analytics
 
