@@ -4,6 +4,7 @@ import { m, useScroll, useSpring } from "motion/react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { scrollToTarget } from "@/lib/scroll";
+import { trackOnce } from "@/lib/analytics";
 
 const SECTIONS = [
   { id: "top", label: "Intro" },
@@ -30,7 +31,11 @@ export function SectionProgress() {
     const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(Boolean) as HTMLElement[];
     const io = new IntersectionObserver(
       (entries) => {
-        for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
+        for (const e of entries)
+          if (e.isIntersecting) {
+            setActive(e.target.id);
+            trackOnce("section-view", { section: e.target.id });
+          }
       },
       { rootMargin: "-45% 0px -54% 0px" },
     );

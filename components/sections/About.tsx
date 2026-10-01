@@ -11,6 +11,7 @@ import { ArrowDown } from "@/components/ui/Icons";
 import { useIsDesktop, useRichMotion } from "@/lib/hooks";
 import { cn } from "@/lib/cn";
 import { ease } from "@/lib/motion";
+import { track } from "@/lib/analytics";
 
 /** Flood colours are fixed (not theme tokens) so dark text on them always passes contrast. */
 const FLOOD: Record<string, string> = { engineer: "#6aa8ff", creator: "#ff6fab", musician: "#eba44a" };
@@ -104,6 +105,7 @@ function PersonaCards() {
           >
             <a
               {...sectionLink(p.target)}
+              onClickCapture={() => track("persona-click", { persona: p.key })}
               onPointerEnter={() => setActive(i)}
               onFocus={() => setActive(i)}
               onBlur={() => setActive(null)}

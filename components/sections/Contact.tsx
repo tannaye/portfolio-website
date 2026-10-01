@@ -10,6 +10,8 @@ import { Magnetic } from "@/components/ui/Magnetic";
 import { useClock, useRichMotion } from "@/lib/hooks";
 import { ease } from "@/lib/motion";
 import { scrollToTarget } from "@/lib/scroll";
+import { Track } from "@/components/ui/Track";
+import { track } from "@/lib/analytics";
 
 const SOCIAL = [
   { name: "LinkedIn", href: socials.linkedin },
@@ -50,15 +52,21 @@ export function Contact() {
         </FadeIn>
 
         <FadeIn delay={0.1} className="mt-12 flex flex-wrap items-center gap-3">
+          <Track event="cv-download">
           <Button href={site.cv} download icon={<Download width={18} height={18} />}>
             Download CV
           </Button>
-          <Button href={socials.linkedin} variant="ghost">
-            LinkedIn
-          </Button>
-          <Button href={socials.github} variant="ghost">
-            GitHub
-          </Button>
+          </Track>
+          <Track event="social-click" data={{ platform: "LinkedIn", from: "contact" }}>
+            <Button href={socials.linkedin} variant="ghost">
+              LinkedIn
+            </Button>
+          </Track>
+          <Track event="social-click" data={{ platform: "GitHub", from: "contact" }}>
+            <Button href={socials.github} variant="ghost">
+              GitHub
+            </Button>
+          </Track>
         </FadeIn>
 
         <div className="mt-28 flex flex-col gap-10 border-t border-line pt-8 md:mt-40 md:flex-row md:items-center md:justify-between">
@@ -73,6 +81,7 @@ export function Contact() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={s.name}
+                      onClick={() => track("social-click", { platform: s.name, from: "footer" })}
                       className="grid size-12 place-items-center rounded-full border border-line text-fg transition-colors duration-300 hover:border-fg hover:bg-fg hover:text-bg"
                     >
                       <Icon />
@@ -116,6 +125,7 @@ function EmailLink() {
 
   const copy = async () => {
     try {
+      track("email-copy");
       await navigator.clipboard.writeText(site.email);
     } catch {
       const ta = document.createElement("textarea");
@@ -134,6 +144,7 @@ function EmailLink() {
       <Magnetic strength={0.12} reach={1.1}>
         <a
           href={`mailto:${site.email}`}
+          onClick={() => track("email-click", { from: "contact" })}
           className="group relative inline-block font-display text-[clamp(1.6rem,5.2vw,5rem)] leading-[1.05] font-semibold tracking-[-0.04em] break-all"
         >
           {site.email}

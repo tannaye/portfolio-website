@@ -9,6 +9,7 @@ import { ArrowDown } from "@/components/ui/Icons";
 import { useSectionLink } from "@/components/Header";
 import { useClock, useRichMotion } from "@/lib/hooks";
 import { ease, spring } from "@/lib/motion";
+import { Track } from "@/components/ui/Track";
 
 export function Hero() {
   const rich = useRichMotion();
@@ -94,12 +95,14 @@ export function Hero() {
               {hero.body}
             </p>
             <div {...fade(1)} className="hero-fade mt-8 flex flex-wrap gap-3">
-              <Button {...sectionLink("work")}>
-                {hero.primaryCta.label}
-              </Button>
-              <Button {...sectionLink("contact")} variant="ghost">
-                {hero.secondaryCta.label}
-              </Button>
+              <Track event="cta-click" data={{ cta: "view-work" }}>
+                <Button {...sectionLink("work")}>{hero.primaryCta.label}</Button>
+              </Track>
+              <Track event="cta-click" data={{ cta: "work-together" }}>
+                <Button {...sectionLink("contact")} variant="ghost">
+                  {hero.secondaryCta.label}
+                </Button>
+              </Track>
             </div>
           </div>
 

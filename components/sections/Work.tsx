@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TransitionLink } from "@/components/ui/TransitionLink";
 import { ArrowUpRight } from "@/components/ui/Icons";
 import { cn } from "@/lib/cn";
+import { Track } from "@/components/ui/Track";
 
 /** Editorial layout: one featured project, then an offset two-column rhythm. */
 const LAYOUT = [
@@ -54,6 +55,7 @@ function ProjectCard({ project, index, aspect, featured }: { project: Project; i
 
   return (
     <>
+      <Track event="case-study-open" data={{ project: project.slug, from: "work" }}>
       <TransitionLink href={`/work/${project.slug}`} data-cursor="view" className="group block" aria-label={`${project.name}: case study`}>
         <div className={cn("relative overflow-hidden rounded-card-lg border border-line", aspect)}>
           <div className="absolute inset-0 transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]">
@@ -103,8 +105,10 @@ function ProjectCard({ project, index, aspect, featured }: { project: Project; i
           </div>
         </div>
       </TransitionLink>
+      </Track>
 
       {project.link && (
+        <Track event="live-site-click" data={{ project: project.slug, from: "work" }}>
         <a
           href={project.link.href}
           target="_blank"
@@ -113,6 +117,7 @@ function ProjectCard({ project, index, aspect, featured }: { project: Project; i
         >
           {domain ?? project.link.label} ↗
         </a>
+        </Track>
       )}
     </>
   );

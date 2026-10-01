@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import type { ReactNode } from "react";
-import { site, socials } from "@/content/site";
+import Script from "next/script";
+import { analytics, site, socials } from "@/content/site";
 import { Header } from "@/components/Header";
 import { Preloader } from "@/components/Preloader";
 import { Providers } from "@/components/Providers";
@@ -109,6 +110,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
           <Curtain />
           <div className="grain" aria-hidden="true" />
+          <Script
+            src="https://cloud.umami.is/script.js"
+            data-website-id={analytics.umamiWebsiteId}
+            data-domains={analytics.domains.join(",")}
+            data-exclude-hash="true"
+            strategy="afterInteractive"
+          />
         </Providers>
       </body>
     </html>

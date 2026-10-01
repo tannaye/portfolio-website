@@ -10,7 +10,7 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react";
-import { useRef, useState, type CSSProperties, type ElementType, type RefObject } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ElementType, type RefObject } from "react";
 import { journey, type JourneyEntry } from "@/content/site";
 import { ArrowDown } from "@/components/ui/Icons";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -18,6 +18,7 @@ import { useIsDesktop, usePrefersReducedMotion } from "@/lib/hooks";
 import { cn } from "@/lib/cn";
 import { ease } from "@/lib/motion";
 import { scrollToTarget, scrollToY } from "@/lib/scroll";
+import { track, trackOnce } from "@/lib/analytics";
 
 /** Where "skip" takes you: the section right after the journey. */
 const NEXT_SECTION = { id: "experience", label: "Experience" };
@@ -72,7 +73,10 @@ export function Journey() {
   // The floating skip button shows only while the journey fills the middle of the screen.
   const inside = useInView(ref, { margin: "-45% 0px -45% 0px" });
 
-  const skip = () => scrollToTarget(NEXT_SECTION.id);
+  const skip = (from: string) => {
+    track("journey-skip", { from });
+    scrollToTarget(NEXT_SECTION.id);
+  };
 
   return (
     <section ref={ref} id="journey" aria-label="Journey" className="relative pt-28 md:pt-40">
@@ -85,7 +89,7 @@ export function Journey() {
               <p className="text-pretty md:text-lg">{journey.lede}</p>
               <button
                 type="button"
-                onClick={skip}
+                onClick={() => skip("intro")}
                 className="group label mt-5 inline-flex items-center gap-2 text-fg transition-colors hover:text-accent-text"
               >
                 Skip the journey
@@ -102,7 +106,7 @@ export function Journey() {
         {inside && (
           <m.button
             type="button"
-            onClick={skip}
+            onClick={() => skip("floating")}
             aria-label={`Skip the journey and go to ${NEXT_SECTION.label}`}
             className="group fixed bottom-6 left-1/2 z-40 flex h-12 -translate-x-1/2 items-center gap-3 whitespace-nowrap rounded-full border border-line-strong bg-bg/80 pl-5 pr-2 text-sm font-medium text-fg shadow-[0_20px_40px_-20px_rgb(0_0_0/0.6)] backdrop-blur-xl transition-colors hover:border-fg md:bottom-8"
             initial={{ opacity: 0, y: 24 }}
@@ -140,6 +144,7 @@ function PinnedWave() {
     if (next === active) return;
     setDir(next > active ? 1 : -1);
     setActive(next);
+    if (next === n - 1) trackOnce("journey-complete", { layout: "wave" });
   });
 
   // Camera: the K-wide track slides left so the marker drifts steadily across the screen.
@@ -454,6 +459,9 @@ function StackedTimeline() {
 function StackedEntry({ entry, index }: { entry: JourneyEntry; index: number }) {
   const ref = useRef<HTMLLIElement>(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -20% 0px" });
+  useEffect(() => {
+    if (inView && index === ENTRIES.length - 1) trackOnce("journey-complete", { layout: "stacked" });
+  }, [inView, index]);
   const chapter = CHAPTER_OF[index];
   const startsChapter = index === 0 || !!entry.chapter;
 

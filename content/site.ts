@@ -170,6 +170,12 @@ export const site = {
   ],
 };
 
+/** Umami Cloud. Only the listed domains report, so local and preview builds stay out of the stats. */
+export const analytics = {
+  umamiWebsiteId: "16de89e4-ab2b-48b0-bb63-50c6578506a5",
+  domains: ["tannaye.dev", "www.tannaye.dev"],
+};
+
 export const socials: Record<
   "github" | "linkedin" | "x" | "instagram" | "tiktok" | "youtube",
   string

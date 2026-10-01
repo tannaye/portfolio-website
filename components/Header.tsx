@@ -10,6 +10,7 @@ import { ease } from "@/lib/motion";
 import { scrollToTarget } from "@/lib/scroll";
 import { menuStore } from "@/lib/store";
 import { ThemeToggle } from "./ui/ThemeToggle";
+import { track } from "@/lib/analytics";
 
 /** In-page anchor that smooth-scrolls on the home page and routes home from elsewhere. */
 export function useSectionLink() {
@@ -92,7 +93,10 @@ export function Header() {
           <ThemeToggle />
           <button
             type="button"
-            onClick={() => menuStore.set((o) => !o)}
+            onClick={() => {
+              if (!menuStore.get()) track("menu-open");
+              menuStore.set((o) => !o);
+            }}
             aria-expanded={menuOpen}
             aria-controls="site-menu"
             className="group flex h-10 items-center gap-3 rounded-full bg-fg px-4 text-sm font-medium text-bg transition-transform active:scale-95"

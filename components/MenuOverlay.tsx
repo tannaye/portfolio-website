@@ -10,6 +10,7 @@ import { ease } from "@/lib/motion";
 import { scrollToTarget } from "@/lib/scroll";
 import { menuStore } from "@/lib/store";
 import { brandIcon } from "./ui/Icons";
+import { track } from "@/lib/analytics";
 
 const socialList = [
   { name: "Instagram", href: socials.instagram },
@@ -160,6 +161,7 @@ export function MenuOverlay() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={s.name}
+                        onClick={() => track("social-click", { platform: s.name, from: "menu" })}
                         className="grid size-12 place-items-center rounded-full border border-line text-fg transition-colors hover:bg-fg hover:text-bg"
                       >
                         <Icon />

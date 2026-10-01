@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { Moon, Sun } from "./Icons";
+import { track } from "@/lib/analytics";
 
 type Theme = "dark" | "light";
 
@@ -16,6 +17,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   const toggle = () => {
     const next: Theme = theme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
+    track("theme-toggle", { to: next });
     try {
       localStorage.setItem("theme", next);
     } catch {}

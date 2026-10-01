@@ -7,6 +7,7 @@ import { ProjectCover } from "@/components/ProjectCover";
 import { Button } from "@/components/ui/Button";
 import { ArrowLeft, ArrowRight } from "@/components/ui/Icons";
 import { TransitionLink } from "@/components/ui/TransitionLink";
+import { Track } from "@/components/ui/Track";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -93,7 +94,9 @@ export default async function CaseStudy({ params }: Props) {
                 )}
                 {project.link && (
                   <div className="mt-10">
-                    <Button href={project.link.href}>{project.link.label}</Button>
+                    <Track event="live-site-click" data={{ project: project.slug, from: "case-study" }}>
+                      <Button href={project.link.href}>{project.link.label}</Button>
+                    </Track>
                   </div>
                 )}
               </div>
@@ -115,6 +118,7 @@ export default async function CaseStudy({ params }: Props) {
       </main>
 
       <nav aria-label="Next project" className="container-page">
+        <Track event="case-study-open" data={{ project: next.slug, from: "next" }}>
         <TransitionLink href={`/work/${next.slug}`} data-cursor="view" data-cursor-label="Next" className="group block border-t border-line pt-10">
           <span className="label flex items-center gap-3 text-fg-subtle">
             Next case study <ArrowRight width={14} height={14} />
@@ -123,6 +127,7 @@ export default async function CaseStudy({ params }: Props) {
             {next.name}
           </span>
         </TransitionLink>
+        </Track>
       </nav>
       <div className="h-28" />
     </>

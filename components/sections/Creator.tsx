@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/Button";
 import { ArrowUpRight, brandIcon, Play } from "@/components/ui/Icons";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { useIsDesktop } from "@/lib/hooks";
+import { track } from "@/lib/analytics";
+import { Track } from "@/components/ui/Track";
 
 const PHONES = [
   { platform: "Instagram", href: socials.instagram, handle: "@tannaye.dev" },
@@ -72,6 +74,7 @@ export function Creator() {
               <FadeIn as="li" key={p.name} delay={i * 0.06}>
                 <a
                   href={p.href}
+                  onClick={() => track("social-click", { platform: p.name, from: "creator" })}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group card flex h-full min-h-56 flex-col justify-between p-6 transition-[border-color,background-color] duration-500 hover:border-[var(--tint-content)]"
@@ -106,9 +109,11 @@ export function Creator() {
             <span className="text-fg-subtle">Work with me. </span>
             {creator.collab}
           </p>
+          <Track event="collab-click">
           <Button href={`mailto:${site.email}?subject=Collaboration%20with%20Tannaye`} variant="ghost">
             Start a collaboration
           </Button>
+          </Track>
         </FadeIn>
       </div>
     </section>
@@ -141,6 +146,7 @@ function PhoneCard({
   return (
     <m.a
       href={href}
+      onClick={() => track("social-click", { platform, from: "phone" })}
       target="_blank"
       rel="noopener noreferrer"
       data-cursor="play"

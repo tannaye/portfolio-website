@@ -8,6 +8,7 @@ import { Play, Volume, VolumeOff } from "@/components/ui/Icons";
 import { usePrefersReducedMotion } from "@/lib/hooks";
 import { TUNING } from "@/lib/tuning";
 import { cn } from "@/lib/cn";
+import { track } from "@/lib/analytics";
 
 // Canvas + audio code is only needed once the section is near; keep it out of the first bundle.
 const GuitarStrings = dynamic(() => import("@/components/GuitarStrings").then((m) => m.GuitarStrings), { ssr: false });
@@ -301,12 +302,31 @@ export function GuitarPlayer() {
     echo.stop();
     rush.stop();
     tune.stop();
+    if (next !== mode) track("guitar-mode", { mode: next });
     setMode(next);
   };
   const start = (game: Game) => {
     setSoundOn(true); // a game without sound is no fun; the toggle still mutes it
+    track("game-start", { game });
     games[game].start();
   };
+
+  // One "game-finish" per completed game, with its result.
+  const echoPhase = echo.state.phase;
+  const rushPhase = rush.state.phase;
+  const tunePhase = tune.state.phase;
+  useEffect(() => {
+    if (echoPhase === "fail") track("game-finish", { game: "echo", rounds: echo.state.seq.length - 1 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [echoPhase]);
+  useEffect(() => {
+    if (rushPhase === "done") track("game-finish", { game: "rush", score: rush.state.score, perfect: rush.state.perfect });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rushPhase]);
+  useEffect(() => {
+    if (tunePhase === "done") track("game-finish", { game: "tune", seconds: tune.state.time, mistakes: tune.state.mistakes });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tunePhase]);
 
   const onPluck = (i: number) => {
     setLast(i);
@@ -377,7 +397,10 @@ export function GuitarPlayer() {
 
         <button
           type="button"
-          onClick={() => setSoundOn((s) => !s)}
+          onClick={() => {
+            track("guitar-sound", { on: !soundOn });
+            setSoundOn((s) => !s);
+          }}
           aria-pressed={soundOn}
           className={cn(
             "label flex h-10 items-center gap-2 rounded-full border px-4 transition-colors",

@@ -11,6 +11,7 @@ import { ArrowLeft, ArrowRight, Close } from "@/components/ui/Icons";
 import { ease } from "@/lib/motion";
 import { getLenis } from "@/lib/scroll";
 import { cn } from "@/lib/cn";
+import { track } from "@/lib/analytics";
 
 /** Column assignment + per-column parallax speed for the asymmetric masonry. */
 const COLUMNS = [
@@ -49,7 +50,10 @@ export function Gallery() {
                     <FadeIn key={idx} delay={c * 0.08 + k * 0.1}>
                       <button
                         type="button"
-                        onClick={() => setOpen(idx)}
+                        onClick={() => {
+                          track("gallery-open", { photo: idx + 1 });
+                          setOpen(idx);
+                        }}
                         data-cursor="view"
                         data-cursor-label="Open"
                         aria-label={`Open photo ${idx + 1} of ${photos.length}: ${p.alt}`}

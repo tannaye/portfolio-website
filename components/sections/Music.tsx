@@ -9,6 +9,7 @@ import { Parallax } from "@/components/animations/Parallax";
 import { RevealLines } from "@/components/animations/RevealLines";
 import { GuitarPlayer } from "@/components/GuitarPlayer";
 import { ArrowUpRight, Play } from "@/components/ui/Icons";
+import { track } from "@/lib/analytics";
 
 export function Music() {
   const ref = useRef<HTMLElement>(null);
@@ -89,6 +90,7 @@ export function Music() {
                     <li key={c.href}>
                       <a
                         href={c.href}
+                        onClick={() => track("clip-click", { clip: c.title })}
                         target="_blank"
                         rel="noopener noreferrer"
                         data-cursor="play"
@@ -106,6 +108,7 @@ export function Music() {
               ) : (
                 <a
                   href={music.clipsFallback.href}
+                  onClick={() => track("clip-click", { clip: "instagram-fallback" })}
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor="play"

@@ -52,6 +52,26 @@ Node 20+ is required.
 - Project `link`s for the Acumen / Leni Labs work, if any are public.
 - The CV's email hyperlink points to `victoriwatannaye@gmail.com`, while its visible text says `iwatannayevictor@gmail.com`. The site uses the visible one; double-check which is correct.
 
+## Analytics
+
+Usage is tracked with [Umami Cloud](https://cloud.umami.is): cookieless, so no consent banner. The website id and allowed domains live in `analytics` in `content/site.ts`. Only `tannaye.dev` and `www.tannaye.dev` report, so local and preview builds stay out of the stats (add a domain there to track a preview URL).
+
+Custom events (Umami → Events), sent through `track()` in `lib/analytics.ts`:
+
+| Event | Data | Fires when |
+| --- | --- | --- |
+| `section-view` | `section` | A section is reached (once per visit) |
+| `journey-skip` / `journey-complete` | `from` / `layout` | The Journey is skipped, or scrolled to its last year |
+| `case-study-open` | `project`, `from` | A case study is opened |
+| `live-site-click` | `project`, `from` | A live product link is clicked |
+| `cv-download`, `email-click`, `email-copy`, `collab-click` | | Contact intent |
+| `social-click` | `platform`, `from` | Any social link (contact, footer, menu, creator, phones) |
+| `cta-click`, `persona-click`, `menu-open`, `theme-toggle` | | Navigation and UI |
+| `gallery-open`, `clip-click` | `photo` / `clip` | Media |
+| `guitar-mode`, `guitar-sound`, `game-start`, `game-finish` | `mode`, `game`, results | The guitar games |
+
+Use `track()` rather than Umami's `data-umami-event` attributes: on same-tab links those make Umami cancel the click and hard-reload the page.
+
 ## Deploying to Vercel
 
 1. Push this folder to a GitHub repo.
