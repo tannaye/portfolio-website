@@ -152,7 +152,7 @@ export const site = {
   title: "Victor Iwatannaye — Software Engineer, AI Engineer & Creator",
   description:
     "Senior software engineer building production backend systems, fintech platforms and AI-powered products. Also Tannaye: technology content creator, based in Lagos.",
-  email: "iwatannayevictor@gmail.com",
+  email: "work@tannaye.dev",
   location: "Lagos, Nigeria",
   timezone: "Africa/Lagos",
   timezoneLabel: "WAT",
