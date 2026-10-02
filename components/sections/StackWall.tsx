@@ -3,18 +3,22 @@
 import { useEffect, useRef, useState } from "react";
 import { stack } from "@/content/site";
 import { FadeIn } from "@/components/animations/FadeIn";
+import { useFinePointer } from "@/lib/hooks";
 import { cn } from "@/lib/cn";
 
 /**
- * The grouped tech list. The group crossing the middle of the screen is lit and the
- * rest dim, so the highlight moves row by row as you scroll (Languages, then Backend,
- * then Data…). When no row is at the reading line, every row shows normally.
+ * The grouped tech list. With a mouse, the group under the cursor is lit and the
+ * rest dim; leave the list and every group shows normally. Touch screens have no
+ * hover, so there the group crossing the middle of the screen is lit instead.
  */
 export function StackWall() {
   const rows = useRef<(HTMLDivElement | null)[]>([]);
   const [active, setActive] = useState(-1);
+  const mouse = useFinePointer();
 
   useEffect(() => {
+    setActive(-1);
+    if (mouse) return; // the cursor drives the highlight
     const visible = new Set<number>();
     const io = new IntersectionObserver(
       (entries) => {
@@ -30,10 +34,10 @@ export function StackWall() {
     );
     rows.current.forEach((el) => el && io.observe(el));
     return () => io.disconnect();
-  }, []);
+  }, [mouse]);
 
   return (
-    <dl className="mt-16 border-t border-line md:mt-24">
+    <dl className="mt-16 border-t border-line md:mt-24" onPointerLeave={mouse ? () => setActive(-1) : undefined}>
       {stack.groups.map((g, i) => {
         const state = active === -1 ? "idle" : active === i ? "on" : "off";
         return (
@@ -43,6 +47,7 @@ export function StackWall() {
               rows.current[i] = el;
             }}
             data-row={i}
+            onPointerEnter={mouse ? () => setActive(i) : undefined}
           >
             <FadeIn delay={i * 0.04} className="grid grid-cols-1 gap-3 border-b border-line py-6 md:grid-cols-12 md:gap-6 md:py-8">
               <dt
